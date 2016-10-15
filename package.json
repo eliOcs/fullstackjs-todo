@@ -4,11 +4,15 @@
   "description": "A simple Todo app using the MEAN stack",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "backend": "node_modules/nodemon/bin/nodemon.js backend/src/index.js -w backend/src",
+    "frontend": "node_modules/webpack/bin/webpack.js --watch",
+    "database": "mongod"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "nodemon": "1.11.0",
+    
     "babel-core": "6.17.0",
     "babel-loader": "6.2.5",
     "babel-preset-es2015": "6.16.0",
