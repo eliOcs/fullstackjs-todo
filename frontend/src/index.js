@@ -1,8 +1,16 @@
 /*jslint browser, es6, maxlen: 80*/
-/*global window, console */
+/*global require */
 
-window.onload = function () {
-    'use strict';
+require('reflect-metadata');
+require('es6-shim');
+require('zone.js');
 
-    [1, 2, 3, 4].forEach((number) => console.log(number));
-};
+document.addEventListener('DOMContentLoaded', function () {
+
+    const platform = require('@angular/platform-browser-dynamic')
+        .platformBrowserDynamic();
+    const AppModule = require('./app.module');
+
+    platform.bootstrapModule(AppModule);
+
+});

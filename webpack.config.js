@@ -6,6 +6,7 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const projectPath = path.resolve(__dirname, 'frontend');
 const buildPath = path.resolve(projectPath, 'build');
+const srcPath = path.resolve(projectPath, 'src');
 
 module.exports = {
     context: projectPath,
@@ -28,9 +29,21 @@ module.exports = {
     },
 
     plugins: [
-        new CopyWebpackPlugin([{
-            from: './static',
-            to: buildPath
-        }])
+        new CopyWebpackPlugin([
+            {
+                from: './static',
+                to: buildPath
+            },
+            {
+                context: srcPath,
+                from: './**/*.html',
+                to: path.resolve(buildPath, 'templates')
+            },
+            {
+                context: srcPath,
+                from: './**/*.css',
+                to: path.resolve(buildPath, 'styles')
+            }
+        ])
     ]
 };
