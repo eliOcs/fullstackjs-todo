@@ -2,16 +2,22 @@
 /*global require, module */
 
 const Component = require('@angular/core').Component;
+const EventEmitter = require('@angular/core').EventEmitter;
+const TodoService = require('./todo.service');
 
 const TodoComponent = Component({
     selector: 'todo',
     inputs: ['todo'],
+    outputs: ['onDelete'],
+    providers: [TodoService],
     templateUrl: 'templates/todo.component.html',
     styleUrls: ['styles/todo.component.css']
 }).Class({
-    constructor: function () {
+    constructor: [TodoService, function (todoService) {
+        this.todoService = todoService;
         this.editing = false;
-    },
+        this.onDelete = new EventEmitter();
+    }],
 
     state() {
         if (this.todo.completed) {
@@ -25,6 +31,7 @@ const TodoComponent = Component({
 
     complete() {
         this.todo.completed = true;
+        this.todoService.updateTodo(this.todo)
     },
 
     edit() {
@@ -32,8 +39,11 @@ const TodoComponent = Component({
     },
 
     finishEdit(newTitle) {
-        this.todo.title = newTitle;
-        this.editing = false;
+        const that = this;
+        that.todoService.updateTodo(that.todo).then(function () {
+            that.todo.title = newTitle;
+            that.editing = false;
+        });
     },
 
     cancelEdit() {
@@ -41,7 +51,10 @@ const TodoComponent = Component({
     },
 
     delete() {
-
+        const that = this;
+        that.todoService.deleteTodo(that.todo).then(function () {
+            that.onDelete.emit(that.todo);
+        });
     }
 });
 

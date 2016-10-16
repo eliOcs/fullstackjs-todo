@@ -14,5 +14,5 @@
   </div>
 </div>
 <ng-container *ngFor="let todo of todos">
-  <todo [todo]="todo"></todo>
+  <todo [todo]="todo" (onDelete)="onDelete($event)"></todo>
 </ng-container>

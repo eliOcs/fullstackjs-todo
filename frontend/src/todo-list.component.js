@@ -2,41 +2,41 @@
 /*global require, module */
 
 const Component = require('@angular/core').Component;
+const TodoService = require('./todo.service');
 
 const TodoListComponent = Component({
     selector: 'todo-list',
-    templateUrl: 'templates/todo-list.component.html'
+    templateUrl: 'templates/todo-list.component.html',
+    providers: [TodoService]
 }).Class({
-    constructor: function () {
+    constructor: [TodoService, function (todosService) {
+        this.todosService = todosService;
         this.newTodoTitle = '';
+        this.todos = [];
+    }],
 
-        this.todos = [
-            {
-                title: 'lemon juice',
-                completed: true
-            },
-            {
-                title: 'you are great',
-                completed: false
-            },
-            {
-                title: 'welcome to the jungle',
-                completed: true
-            }
-        ];
+    ngOnInit() {
+        this.todosService.getTodos().then((todos) => this.todos = todos);
     },
 
     newTodo() {
-        this.todos.push({
+        const todo = {
             title: this.newTodoTitle,
             completed: false
+        };
+        const that = this;
+        that.todosService.createTodo(todo).then(function (todo) {
+            that.todos.push(todo);
+            that.clearNewTodoTitle();
         });
-
-        this.clearNewTodoTitle();
     },
 
     clearNewTodoTitle() {
         this.newTodoTitle = '';
+    },
+
+    onDelete(todo) {
+        this.todos.splice(this.todos.indexOf(todo), 1);
     }
 
 });
