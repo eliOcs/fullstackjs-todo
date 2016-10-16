@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="eight columns">
+    <input
+      [(ngModel)]="newTodoTitle"
+      (keyup.escape)="clearNewTodoTitle()"
+      (keyup.enter)="newTodo()"
+      class="u-full-width"
+      type="text"
+      placeholder="What do you have to do?">
+  </div>
+  <div class="four columns">
+    <button class="button-primary" (click)="newTodo()">add</button>
+    <button [hidden]="newTodoTitle.length === 0" (click)="clearNewTodoTitle()">cancel</button>
+  </div>
+</div>
+<ng-container *ngFor="let todo of todos">
+  <todo [todo]="todo"></todo>
+</ng-container>

@@ -1,13 +1,13 @@
 
-<div class="row" [ngSwitch]="state()">
+<div class="row" (mouseenter)="hovered = true" (mouseleave)="hovered = false" [ngSwitch]="state()">
 
   <ng-container *ngSwitchDefault>
     <div class="eight columns">
       <h3 (click)="edit()">{{ todo.title }}</h3>
     </div>
     <div class="four columns">
-      <button (click)="complete()">complete</button>
-      <button (click)="delete()">delete</button>
+      <button [hidden]="!hovered" (click)="complete()">complete</button>
+      <button [hidden]="!hovered" (click)="delete()">delete</button>
     </div>
   </ng-container>
 
@@ -16,7 +16,7 @@
       <h3 class="completed">{{ todo.title }}</h3>
     </div>
     <div class="four columns">
-      <button (click)="delete()">delete</button>
+      <button [hidden]="!hovered" (click)="delete()">delete</button>
     </div>
   </ng-container>
 

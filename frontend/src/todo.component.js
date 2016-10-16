@@ -2,24 +2,18 @@
 /*global require, module */
 
 const Component = require('@angular/core').Component;
-const ViewChild = require('@angular/core').ViewChild;
-
 
 const TodoComponent = Component({
     selector: 'todo',
+    inputs: ['todo'],
     templateUrl: 'templates/todo.component.html',
     styleUrls: ['styles/todo.component.css']
 }).Class({
     constructor: function () {
         this.editing = false;
-
-        this.todo = {
-            title: "Lemon juice",
-            completed: false
-        }
     },
 
-    state: function () {
+    state() {
         if (this.todo.completed) {
             return "completed";
         } else if (this.editing) {
@@ -29,24 +23,24 @@ const TodoComponent = Component({
         }
     },
 
-    complete: function () {
+    complete() {
         this.todo.completed = true;
     },
 
-    edit: function () {
+    edit() {
         this.editing = true;
     },
 
-    finishEdit: function (newTitle) {
+    finishEdit(newTitle) {
         this.todo.title = newTitle;
         this.editing = false;
     },
 
-    cancelEdit: function () {
+    cancelEdit() {
         this.editing = false;
     },
 
-    delete: function () {
+    delete() {
 
     }
 });

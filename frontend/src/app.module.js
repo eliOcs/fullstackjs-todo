@@ -6,6 +6,7 @@ const BrowserModule = require('@angular/platform-browser').BrowserModule;
 const FormsModule = require('@angular/forms').FormsModule;
 
 const AppComponent = require('./app.component');
+const TodoListComponent = require('./todo-list.component');
 const TodoComponent = require('./todo.component');
 
 const AppModule = NgModule({
@@ -15,6 +16,7 @@ const AppModule = NgModule({
     ],
     declarations: [
         AppComponent,
+        TodoListComponent,
         TodoComponent
     ],
     bootstrap: [AppComponent]
