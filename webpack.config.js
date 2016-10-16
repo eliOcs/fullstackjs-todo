@@ -7,6 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const projectPath = path.resolve(__dirname, 'frontend');
 const buildPath = path.resolve(projectPath, 'build');
 const srcPath = path.resolve(projectPath, 'src');
+const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
 module.exports = {
     context: projectPath,
@@ -42,6 +43,16 @@ module.exports = {
             {
                 context: srcPath,
                 from: './**/*.css',
+                to: path.resolve(buildPath, 'styles')
+            },
+            {
+                context: path.resolve(nodeModulesPath, 'skeleton-css/css'),
+                from: './normalize.css',
+                to: path.resolve(buildPath, 'styles')
+            },
+            {
+                context: path.resolve(nodeModulesPath, 'skeleton-css/css'),
+                from: './skeleton.css',
                 to: path.resolve(buildPath, 'styles')
             }
         ])
