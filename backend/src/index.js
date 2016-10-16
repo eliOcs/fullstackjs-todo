@@ -2,7 +2,22 @@
 'use strict';
 
 const express = require('express');
+const async = require('async');
+const database = require('./database');
 
 const server = express();
 server.use('/', express.static("./frontend/build"));
-server.listen(3000, () => console.log('Server is running'));
+server.use('/api', require("./api"));
+
+async.series([
+    database.connect,
+    function startServer(next) {
+        server.listen(3000, next);
+    }
+], function (err) {
+    if (err) {
+        console.log("Couldn't start server", err);
+    } else {
+        console.log("Started server");
+    }
+});
