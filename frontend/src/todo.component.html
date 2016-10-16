@@ -3,7 +3,7 @@
 
   <ng-container *ngSwitchDefault>
     <div class="eight columns">
-      <h3 (click)="edit()">{{ todo.name }}</h3>
+      <h3 (click)="edit()">{{ todo.title }}</h3>
     </div>
     <div class="four columns">
       <button (click)="complete()">complete</button>
@@ -13,7 +13,7 @@
 
   <ng-container *ngSwitchCase="'completed'">
     <div class="eight columns">
-      <h3 class="completed">{{ todo.name }}</h3>
+      <h3 class="completed">{{ todo.title }}</h3>
     </div>
     <div class="four columns">
       <button (click)="delete()">delete</button>
@@ -22,10 +22,17 @@
 
   <ng-container *ngSwitchCase="'editing'">
     <div class="eight columns">
-      <input [(ngModel)]="todo.name" class="u-full-width" type="text" placeholder="What do you have to do?">
+      <input #titleField
+        (keyup.escape)="cancelEdit()"
+        (keyup.enter)="finishEdit(titleField.value)"
+        [value]="todo.title"
+        class="u-full-width"
+        type="text"
+        placeholder="What do you have to do?">
     </div>
     <div class="four columns">
-      <button (click)="finishEdit()">finish</button>
+      <button (click)="finishEdit(titleField.value)">finish</button>
+      <button (click)="cancelEdit()">cancel</button>
     </div>
   </ng-container>
 

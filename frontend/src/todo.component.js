@@ -2,6 +2,8 @@
 /*global require, module */
 
 const Component = require('@angular/core').Component;
+const ViewChild = require('@angular/core').ViewChild;
+
 
 const TodoComponent = Component({
     selector: 'todo',
@@ -12,7 +14,7 @@ const TodoComponent = Component({
         this.editing = false;
 
         this.todo = {
-            name: "Lemon juice",
+            title: "Lemon juice",
             completed: false
         }
     },
@@ -35,7 +37,12 @@ const TodoComponent = Component({
         this.editing = true;
     },
 
-    finishEdit: function () {
+    finishEdit: function (newTitle) {
+        this.todo.title = newTitle;
+        this.editing = false;
+    },
+
+    cancelEdit: function () {
         this.editing = false;
     },
 
