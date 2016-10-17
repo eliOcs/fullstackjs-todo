@@ -16,7 +16,6 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = database.models.User;
 
 function generatePasswordHash(password, user) {
-    console.log(`l33tp4sw0rd#${password.length}#${user.id}`);
     return util.hash({
         password: password,
         salt: `l33tp4sw0rd#${password.length}#${user.id}`
@@ -30,7 +29,7 @@ function validatePassword(password, user) {
 passport.use(new LocalStrategy({
     usernameField: 'email'
 }, function (email, password, next) {
-    User.findOne({email: email}, function (err, user) {
+    User.findOne({email}, function (err, user) {
         if (err) {
             return next(err);
         }
@@ -44,8 +43,15 @@ passport.use(new LocalStrategy({
 }));
 
 
-router.post('/users/signup', function () {
-
+router.post('/users/signup', function (req, res, next) {
+    const user = new User({name: req.body.name, email: req.body.email});
+    user.set("_password_hash", generatePasswordHash(req.body.password, user));
+    user.save(function (err, user) {
+        if (err) {
+            return next(err);
+        }
+        res.status(201).json(user);
+    });
 });
 
 router.post(

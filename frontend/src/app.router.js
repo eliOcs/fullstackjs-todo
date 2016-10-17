@@ -3,8 +3,8 @@
 
 const RouterModule = require('@angular/router').RouterModule;
 const TodoListComponent = require('./todo/todo-list.component');
-const SignInComponent = require('./account/sign-in.component');
-const SignUpComponent = require('./account/sign-up.component');
+const SignInComponent = require('./user/sign-in.component');
+const SignUpComponent = require('./user/sign-up.component');
 
 const Router = RouterModule.forRoot([
     {

@@ -4,7 +4,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let database = {};
+mongoose.Promise = global.Promise;
+
+let database = exports;
 
 database.connect = function (next) {
     mongoose.connect('mongodb://localhost/todos', next);
@@ -28,5 +30,3 @@ database.models.Todo = mongoose.model('Todo', new mongoose.Schema({
         ref: 'User'
     }
 }));
-
-module.exports = database;
