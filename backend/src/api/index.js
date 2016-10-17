@@ -34,7 +34,7 @@ passport.use(new LocalStrategy({
             return next(err);
         }
 
-        if (!user || validatePassword(password, user)) {
+        if (!user || !validatePassword(password, user)) {
             return next(null, false);
         }
 
@@ -58,56 +58,81 @@ router.post(
     '/users/signin',
     passport.authenticate('local'),
     function (req, res, next) {
-        res.status(200);
+        res.status(200).send();
     }
 );
 
-router.get('/todos', function (req, res, next) {
-    Todo.find({}, function (err, todos) {
-        if (err) {
-            return next(err);
-        }
-        res.json(todos);
-    });
-});
+function requireActiveSession(req, res, next) {
+    if (req.user) {
+        return next();
+    }
 
-router.post('/todos', function (req, res, next) {
-    const todo = req.body;
+    res.status(401).send();
+}
 
-    Todo.create(todo, function (err, todo) {
-        if (err) {
-            return next(err);
-        }
-        res.status(201).json(todo);
-    });
-});
+router.get(
+    '/todos',
+    requireActiveSession,
+    function (req, res, next) {
+        Todo.find({'_user': req.user.id}, function (err, todos) {
+            if (err) {
+                return next(err);
+            }
 
-router.put('/todos/:id', function (req, res, next) {
-    const id = req.params.id;
-    const todo = req.body;
+            res.json(todos);
+        });
+    }
+);
 
-    Todo.findByIdAndUpdate(id, todo, {new: true}, function (err, todo) {
-        if (err) {
-            return next(err);
-        }
+router.post(
+    '/todos',
+    requireActiveSession,
+    function (req, res, next) {
+        const todo = req.body;
 
-        res.json(todo);
-    });
-});
+        Todo.create(todo, function (err, todo) {
+            if (err) {
+                return next(err);
+            }
+            res.status(201).json(todo);
+        });
+    }
+);
 
-router.delete('/todos/:id', function (req, res, next) {
-    const id = req.params.id;
-    Todo.findByIdAndRemove(id, function (err, todo) {
-        if (err) {
-            return next(err);
-        }
+router.put(
+    '/todos/:id',
+    requireActiveSession,
+    function (req, res, next) {
+        const id = req.params.id;
+        const todo = req.body;
 
-        if (!todo) {
-            return next(new Error(`Todo with id: '${id}' doesn't exist`));
-        }
-        res.json(todo);
-    });
-});
+        Todo.findByIdAndUpdate(id, todo, {new: true}, function (err, todo) {
+            if (err) {
+                return next(err);
+            }
+
+            res.json(todo);
+        });
+    }
+);
+
+router.delete(
+    '/todos/:id',
+    requireActiveSession,
+    function (req, res, next) {
+        const id = req.params.id;
+        Todo.findByIdAndRemove(id, function (err, todo) {
+            if (err) {
+                return next(err);
+            }
+
+            if (!todo) {
+                return next(new Error(`Todo with id: '${id}' doesn't exist`));
+            }
+            res.json(todo);
+        });
+    }
+);
 
 router.use(function handleErrors(err, req, res, next) {
     res.status(500).json({

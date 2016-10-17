@@ -3,17 +3,28 @@
 
 const Component = require('@angular/core').Component;
 const TodoService = require('./todo.service');
+const UserService = require('../user/user.service');
+const Router = require('@angular/router').Router;
 
 const TodoListComponent = Component({
     selector: 'todo-list',
     templateUrl: 'templates/todo/todo-list.component.html',
-    providers: [TodoService]
+    providers: [TodoService, UserService]
 }).Class({
-    constructor: [TodoService, function (todosService) {
-        this.todosService = todosService;
-        this.newTodoTitle = '';
-        this.todos = [];
-    }],
+    constructor: [
+        TodoService,
+        UserService,
+        Router,
+        function (todosService, userService, router) {
+            this.todosService = todosService;
+            this.newTodoTitle = '';
+            this.todos = [];
+
+            if (!userService.isSessionActive()) {
+                router.navigate(['/signin']);
+            }
+        }
+    ],
 
     ngOnInit() {
         this.todosService.getTodos().then((todos) => this.todos = todos);

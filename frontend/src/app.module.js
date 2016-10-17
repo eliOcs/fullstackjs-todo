@@ -5,6 +5,7 @@ const NgModule = require('@angular/core').NgModule;
 const BrowserModule = require('@angular/platform-browser').BrowserModule;
 const FormsModule = require('@angular/forms').FormsModule;
 const HttpModule = require('@angular/http').HttpModule;
+const CookieService = require('angular2-cookie/services/cookies.service').CookieService;
 
 const Router = require('./app.router');
 const AppComponent = require('./app.component');
@@ -21,6 +22,9 @@ const AppModule = NgModule({
         FormsModule,
         HttpModule,
         Router
+    ],
+    providers: [
+        CookieService
     ],
     declarations: [
         AppComponent,

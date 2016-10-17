@@ -9,7 +9,9 @@ const passport = require('passport');
 module.exports = function createSession() {
     return [
         session({
+            name: 'todo-session',
             secret: 'l33tp4sw0rd',
+            cookie: {httpOnly: false},
             saveUninitialized: false,
             resave: false,
             store: new MongoStore({
@@ -27,4 +29,6 @@ passport.serializeUser(function (user, next) {
     next(null, user.id);
 });
 
-passport.deserializeUser(User.findById);
+passport.deserializeUser(function (id, next) {
+    User.findById(id, next);
+});
