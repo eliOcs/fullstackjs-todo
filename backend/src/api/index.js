@@ -10,6 +10,51 @@ const router = new express.Router();
 
 router.use(parser.json());
 
+const util = require('../util');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User = database.models.User;
+
+function generatePasswordHash(password, user) {
+    console.log(`l33tp4sw0rd#${password.length}#${user.id}`);
+    return util.hash({
+        password: password,
+        salt: `l33tp4sw0rd#${password.length}#${user.id}`
+    });
+}
+
+function validatePassword(password, user) {
+    return user.get("_password_hash") === generatePasswordHash(password, user);
+}
+
+passport.use(new LocalStrategy({
+    usernameField: 'email'
+}, function (email, password, next) {
+    User.findOne({email: email}, function (err, user) {
+        if (err) {
+            return next(err);
+        }
+
+        if (!user || validatePassword(password, user)) {
+            return next(null, false);
+        }
+
+        next(null, user);
+    });
+}));
+
+
+router.post('/users/signup', function () {
+
+});
+
+router.post(
+    '/users/signin',
+    passport.authenticate('local'),
+    function (req, res, next) {
+        res.status(200);
+    }
+);
 
 router.get('/todos', function (req, res, next) {
     Todo.find({}, function (err, todos) {
