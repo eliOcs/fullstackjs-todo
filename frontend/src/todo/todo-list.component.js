@@ -6,7 +6,7 @@ const TodoService = require('./todo.service');
 
 const TodoListComponent = Component({
     selector: 'todo-list',
-    templateUrl: 'templates/todo-list.component.html',
+    templateUrl: 'templates/todo/todo-list.component.html',
     providers: [TodoService]
 }).Class({
     constructor: [TodoService, function (todosService) {

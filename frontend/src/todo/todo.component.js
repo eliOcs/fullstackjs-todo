@@ -10,8 +10,8 @@ const TodoComponent = Component({
     inputs: ['todo'],
     outputs: ['onDelete'],
     providers: [TodoService],
-    templateUrl: 'templates/todo.component.html',
-    styleUrls: ['styles/todo.component.css']
+    templateUrl: 'templates/todo/todo.component.html',
+    styleUrls: ['styles/todo/todo.component.css']
 }).Class({
     constructor: [TodoService, function (todoService) {
         this.todoService = todoService;

@@ -8,6 +8,10 @@ const HttpModule = require('@angular/http').HttpModule;
 
 const Router = require('./app.router');
 const AppComponent = require('./app.component');
+
+const SignInComponent = require('./account/sign-in.component');
+const SignUpComponent = require('./account/sign-up.component');
+
 const TodoListComponent = require('./todo/todo-list.component');
 const TodoComponent = require('./todo/todo.component');
 
@@ -20,6 +24,8 @@ const AppModule = NgModule({
     ],
     declarations: [
         AppComponent,
+        SignInComponent,
+        SignUpComponent,
         TodoListComponent,
         TodoComponent
     ],
