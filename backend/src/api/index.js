@@ -50,9 +50,23 @@ router.post('/users/signup', function (req, res, next) {
         if (err) {
             return next(err);
         }
-        res.status(201).json(user);
+        req.login(user, function (err) {
+            if (err) {
+                return next(err);
+            }
+            res.status(201).json(user);
+        });
     });
 });
+
+router.post(
+    '/users/signout',
+    requireActiveSession,
+    function (req, res, next) {
+        req.logout();
+        res.status(200).send();
+    }
+);
 
 router.post(
     '/users/signin',
