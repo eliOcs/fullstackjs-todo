@@ -12,7 +12,12 @@ const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 module.exports = {
     context: projectPath,
 
-    entry: './src/index.js',
+    entry: [
+        'babel-polyfill',
+        'reflect-metadata',
+        'zone.js',
+        './src/index.js'
+    ],
 
     devtool: 'source-map',
 
