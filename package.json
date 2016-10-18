@@ -6,7 +6,9 @@
   "scripts": {
     "backend": "node_modules/nodemon/bin/nodemon.js backend/src/index.js -w backend/src",
     "frontend": "node_modules/webpack/bin/webpack.js --watch",
-    "database": "mongod"
+    "frontend:clean": "rm -rf frontend/build",
+    "database": "mongod",
+    "database:clean": "mongo todos --eval 'db.dropDatabase()'"
   },
   "author": "",
   "license": "ISC",
