@@ -89,6 +89,7 @@ router.post(
     requireActiveSession,
     function (req, res, next) {
         const todo = req.body;
+        todo['_user'] = req.user.id;
 
         Todo.create(todo, function (err, todo) {
             if (err) {
@@ -105,14 +106,26 @@ router.put(
     function (req, res, next) {
         const id = req.params.id;
         const todo = req.body;
+        todo['_user'] = req.user.id;
 
-        Todo.findByIdAndUpdate(id, todo, {new: true}, function (err, todo) {
-            if (err) {
-                return next(err);
+        Todo.findOneAndUpdate(
+            {
+                '_user': req.user.id,
+                '_id': id
+            },
+            todo,
+            {new: true},
+            function (err, todo) {
+                if (err) {
+                    return next(err);
+                }
+                if (!todo) {
+                    return next(new Error("Todo doesn't exist"));
+                }
+
+                res.json(todo);
             }
-
-            res.json(todo);
-        });
+        );
     }
 );
 
@@ -120,23 +133,29 @@ router.delete(
     '/todos/:id',
     requireActiveSession,
     function (req, res, next) {
-        const id = req.params.id;
-        Todo.findByIdAndRemove(id, function (err, todo) {
-            if (err) {
-                return next(err);
-            }
+        Todo.findOneAndRemove(
+            {
+                '_user': req.user.id,
+                '_id': req.params.id
+            },
+            function (err, todo) {
+                if (err) {
+                    return next(err);
+                }
 
-            if (!todo) {
-                return next(new Error(`Todo with id: '${id}' doesn't exist`));
+                if (!todo) {
+                    return next(new Error(`Todo with id: '${req.params.id}'
+                        doesn't exist`));
+                }
+                res.json(todo);
             }
-            res.json(todo);
-        });
+        );
     }
 );
 
 router.use(function handleErrors(err, req, res, next) {
     res.status(500).json({
-        title: "Internal server error",
+        title: 'Internal server error',
         message: err.message
     });
 });
