@@ -7,7 +7,7 @@ const path = require('path');
 
 const server = express();
 
-server.use(session());
+server.use(session.initialize());
 
 server.use('/', express.static("./frontend/build"));
 server.use('/api', require("./api"));

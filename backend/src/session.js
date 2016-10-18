@@ -1,14 +1,30 @@
 /*jslint node, es6, maxlen: 80*/
 'use strict';
 
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+const expressSession = require('express-session');
+const MongoStore = require('connect-mongo')(expressSession);
 const database = require('./database');
 const passport = require('passport');
+const session = exports;
 
-module.exports = function createSession() {
+function setupUserSessionSerialization() {
+    const User = database.models.User;
+
+    passport.serializeUser(function (user, next) {
+        next(null, user.id);
+    });
+
+    passport.deserializeUser(function (id, next) {
+        User.findById(id, next);
+    });
+}
+
+session.initialize = function () {
+
+    setupUserSessionSerialization();
+
     return [
-        session({
+        expressSession({
             name: 'todo-session',
             secret: 'l33tp4sw0rd',
             saveUninitialized: false,
@@ -22,12 +38,10 @@ module.exports = function createSession() {
     ];
 };
 
-const User = database.models.User;
+session.requireActiveSession = function (req, res, next) {
+    if (req.user) {
+        return next();
+    }
 
-passport.serializeUser(function (user, next) {
-    next(null, user.id);
-});
-
-passport.deserializeUser(function (id, next) {
-    User.findById(id, next);
-});
+    res.status(401).send();
+};

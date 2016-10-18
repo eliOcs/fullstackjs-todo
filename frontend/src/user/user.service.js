@@ -14,7 +14,6 @@ const UserService = Class({
     constructor: [Http, CookieService, function (http, cookieService) {
         this.http = http;
         this.cookieService = cookieService;
-        this.baseUrl = "/api/users";
         this.headers = new Headers({"Content-Type": "application/json"});
         this.user = new Subject();
         this.getUser().then((user) => {
@@ -24,7 +23,7 @@ const UserService = Class({
 
     getUser() {
         return this.http
-            .get(`${this.baseUrl}/me`)
+            .get('/api/users/me')
             .toPromise().then(
                 (response) => response.json(),
                 (response) => response.status === 401 ? null : Promise.reject(response)
@@ -34,7 +33,7 @@ const UserService = Class({
     signIn(email, password) {
         return this.http
             .post(
-                `${this.baseUrl}/signin`,
+                '/api/auth/local/signin',
                 JSON.stringify({email, password}),
                 {headers: this.headers}
             )
@@ -50,7 +49,7 @@ const UserService = Class({
     signUp(name, email, password) {
         return this.http
             .post(
-                `${this.baseUrl}/signup`,
+                '/api/auth/local/signup',
                 JSON.stringify({name, email, password}),
                 {headers: this.headers}
             )
@@ -65,7 +64,7 @@ const UserService = Class({
 
     signOut() {
         return this.http
-            .post(`${this.baseUrl}/signout`)
+            .post('/api/auth/signout')
             .toPromise()
             .then(() => this.user.next(null));
     },

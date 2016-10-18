@@ -4,93 +4,24 @@
 const express = require('express');
 const database = require('../database');
 const parser = require('body-parser');
+const session = require('../session');
+const passport = require('passport');
 
 const Todo = database.models.Todo;
 const router = new express.Router();
 
 router.use(parser.json());
 
-const util = require('../util');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const User = database.models.User;
-
-function generatePasswordHash(password, user) {
-    return util.hash({
-        password: password,
-        salt: `l33tp4sw0rd#${password.length}#${user.id}`
-    });
-}
-
-function validatePassword(password, user) {
-    return user.get("_password_hash") === generatePasswordHash(password, user);
-}
-
-passport.use(new LocalStrategy({
-    usernameField: 'email'
-}, function (email, password, next) {
-    User.findOne({email}, function (err, user) {
-        if (err) {
-            return next(err);
-        }
-
-        if (!user || !validatePassword(password, user)) {
-            return next(null, false);
-        }
-
-        next(null, user);
-    });
-}));
-
-
-router.post('/users/signup', function (req, res, next) {
-    const user = new User({name: req.body.name, email: req.body.email});
-    user.set("_password_hash", generatePasswordHash(req.body.password, user));
-    user.save(function (err, user) {
-        if (err) {
-            return next(err);
-        }
-        req.login(user, function (err) {
-            if (err) {
-                return next(err);
-            }
-            res.status(201).json(user);
-        });
-    });
-});
-
-function requireActiveSession(req, res, next) {
-    if (req.user) {
-        return next();
-    }
-
-    res.status(401).send();
-}
+router.use('/auth', require('./auth'));
 
 router.get(
     '/users/me',
-    requireActiveSession,
+    session.requireActiveSession,
     function (req, res, next) {
         res.json(req.user);
     }
 );
 
-router.post(
-    '/users/signout',
-    requireActiveSession,
-    function (req, res, next) {
-        req.logout();
-        res.status(200).send();
-    }
-);
-
-router.post(
-    '/users/signin',
-    passport.authenticate('local'),
-    function (req, res, next) {
-        res.json(req.user);
-    }
-);
 
 const GitHubStrategy = require('passport-github2');
 passport.use(
@@ -140,7 +71,7 @@ router.get(
 
 router.get(
     '/todos',
-    requireActiveSession,
+    session.requireActiveSession,
     function (req, res, next) {
         Todo.find({'_user': req.user.id}, function (err, todos) {
             if (err) {
@@ -154,7 +85,7 @@ router.get(
 
 router.post(
     '/todos',
-    requireActiveSession,
+    session.requireActiveSession,
     function (req, res, next) {
         const todo = req.body;
         todo['_user'] = req.user.id;
@@ -170,7 +101,7 @@ router.post(
 
 router.put(
     '/todos/:id',
-    requireActiveSession,
+    session.requireActiveSession,
     function (req, res, next) {
         const id = req.params.id;
         const todo = req.body;
@@ -199,7 +130,7 @@ router.put(
 
 router.delete(
     '/todos/:id',
-    requireActiveSession,
+    session.requireActiveSession,
     function (req, res, next) {
         Todo.findOneAndRemove(
             {
