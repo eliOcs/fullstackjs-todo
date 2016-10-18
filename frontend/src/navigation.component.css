@@ -1,0 +1,13 @@
+.row {
+  margin-bottom: 20px;
+}
+
+a:not(:first-child) {
+  margin-left: 10px;
+}
+
+a.active {
+  font-weight: bold;
+  text-decoration: none;
+  color: #ababab;
+}

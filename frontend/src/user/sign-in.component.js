@@ -3,26 +3,21 @@
 
 const Component = require('@angular/core').Component;
 const UserService = require('./user.service');
-const Router = require('@angular/router').Router;
 
 const SignInComponent = Component({
     selector: 'sign-in',
-    providers: [UserService],
     templateUrl: 'templates/user/sign-in.component.html'
 }).Class({
-    constructor: [UserService, Router, function (userService, router) {
+    constructor: [UserService, function (userService) {
         this.userService = userService;
-        this.router = router;
     }],
 
     signIn: function () {
         const that = this;
         this.userService
             .signIn(that.email, that.password)
-            .then(function (succesful) {
-                if (succesful) {
-                    that.router.navigate(['']);
-                } else {
+            .then(function (successful) {
+                if (!successful) {
                     console.log("FAILED TO LOG!");
                 }
             });

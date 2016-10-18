@@ -59,6 +59,22 @@ router.post('/users/signup', function (req, res, next) {
     });
 });
 
+function requireActiveSession(req, res, next) {
+    if (req.user) {
+        return next();
+    }
+
+    res.status(401).send();
+}
+
+router.get(
+    '/users/me',
+    requireActiveSession,
+    function (req, res, next) {
+        res.json(req.user);
+    }
+);
+
 router.post(
     '/users/signout',
     requireActiveSession,
@@ -72,17 +88,9 @@ router.post(
     '/users/signin',
     passport.authenticate('local'),
     function (req, res, next) {
-        res.status(200).send();
+        res.json(req.user);
     }
 );
-
-function requireActiveSession(req, res, next) {
-    if (req.user) {
-        return next();
-    }
-
-    res.status(401).send();
-}
 
 router.get(
     '/todos',

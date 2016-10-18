@@ -7,6 +7,7 @@ const Headers = require('@angular/http').Headers;
 const CookieService = require('angular2-cookie/services/cookies.service').CookieService;
 
 require('rxjs/add/operator/toPromise');
+const Subject = require('rxjs').Subject;
 
 const UserService = Class({
 
@@ -15,10 +16,19 @@ const UserService = Class({
         this.cookieService = cookieService;
         this.baseUrl = "/api/users";
         this.headers = new Headers({"Content-Type": "application/json"});
+        this.user = new Subject();
+        this.getUser().then((user) => {
+            this.user.next(user)
+        });
     }],
 
-    isSessionActive() {
-        return Boolean(this.cookieService.get('todo-session'));
+    getUser() {
+        return this.http
+            .get(`${this.baseUrl}/me`)
+            .toPromise().then(
+                (response) => response.json(),
+                (response) => response.status === 401 ? null : Promise.reject(response)
+            ).catch(this.handleError);
     },
 
     signIn(email, password) {
@@ -29,7 +39,10 @@ const UserService = Class({
                 {headers: this.headers}
             )
             .toPromise().then(
-                () => true,
+                (response) => {
+                    this.user.next(response.json());
+                    return true;
+                },
                 (response) => response.status === 401 ? false : Promise.reject(response)
             ).catch(this.handleError);
     },
@@ -42,9 +55,19 @@ const UserService = Class({
                 {headers: this.headers}
             )
             .toPromise().then(
-                () => true,
+                (response) => {
+                    this.user.next(response.json());
+                    return true;
+                },
                 (response) => response.status === 401 ? false : Promise.reject(response)
             ).catch(this.handleError);
+    },
+
+    signOut() {
+        return this.http
+            .post(`${this.baseUrl}/signout`)
+            .toPromise()
+            .then(() => this.user.next(null));
     },
 
     handleError(err) {

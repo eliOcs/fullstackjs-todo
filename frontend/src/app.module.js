@@ -8,7 +8,10 @@ const HttpModule = require('@angular/http').HttpModule;
 const CookieService = require('angular2-cookie/services/cookies.service').CookieService;
 
 const Router = require('./app.router');
+const UserService = require('./user/user.service');
 const AppComponent = require('./app.component');
+const LoadingComponent = require('./loading.component');
+const NavigationComponent = require('./navigation.component');
 
 const SignInComponent = require('./user/sign-in.component');
 const SignUpComponent = require('./user/sign-up.component');
@@ -24,10 +27,13 @@ const AppModule = NgModule({
         Router
     ],
     providers: [
+        UserService,
         CookieService
     ],
     declarations: [
         AppComponent,
+        LoadingComponent,
+        NavigationComponent,
         SignInComponent,
         SignUpComponent,
         TodoListComponent,

@@ -11,7 +11,6 @@ module.exports = function createSession() {
         session({
             name: 'todo-session',
             secret: 'l33tp4sw0rd',
-            cookie: {httpOnly: false},
             saveUninitialized: false,
             resave: false,
             store: new MongoStore({
