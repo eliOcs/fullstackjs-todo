@@ -15,6 +15,7 @@ const NavigationComponent = require('./navigation.component');
 
 const SignInComponent = require('./user/sign-in.component');
 const SignUpComponent = require('./user/sign-up.component');
+const ExternalAuthProvidersComponent = require('./user/external-auth-providers.component');
 
 const TodoListComponent = require('./todo/todo-list.component');
 const TodoComponent = require('./todo/todo.component');
@@ -36,6 +37,7 @@ const AppModule = NgModule({
         NavigationComponent,
         SignInComponent,
         SignUpComponent,
+        ExternalAuthProvidersComponent,
         TodoListComponent,
         TodoComponent
     ],

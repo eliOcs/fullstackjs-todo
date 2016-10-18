@@ -19,7 +19,8 @@ database.models = {};
 database.models.User = mongoose.model('User', new mongoose.Schema({
     name: String,
     email: String,
-    "_password_hash": String
+    "_password_hash": String,
+    "_github_id": String
 }));
 
 database.models.Todo = mongoose.model('Todo', new mongoose.Schema({
