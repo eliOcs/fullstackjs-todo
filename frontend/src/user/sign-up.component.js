@@ -3,6 +3,7 @@
 
 const Component = require('@angular/core').Component;
 const UserService = require('./user.service');
+const Router = require('@angular/router').Router;
 
 const SignUpComponent = Component({
     selector: 'sign-up',
@@ -10,12 +11,19 @@ const SignUpComponent = Component({
     templateUrl: 'templates/user/sign-up.component.html'
 }).Class({
 
-    constructor: [UserService, function (userService) {
+    constructor: [UserService, Router, function (userService, router) {
         this.userService = userService;
+        this.router = router;
     }],
 
     signUp: function () {
-        this.userService.signUp(this.name, this.email, this.password);
+        const router = this.router;
+
+        this.userService
+            .signUp(this.name, this.email, this.password)
+            .then(function () {
+                router.navigate(['']);
+            });
     }
 
 });
