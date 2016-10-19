@@ -6,6 +6,7 @@ const router = new express.Router();
 const session = require('../../session');
 
 router.use('/local', require('./local'));
+router.use('/github', require('./github'));
 
 router.post(
     '/signout',

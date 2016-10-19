@@ -33,8 +33,7 @@ const UserSchema = new mongoose.Schema({
         unique: true
     },
     "_password_hash": {
-        type: String,
-        required: true
+        type: String
     },
     "_github_id": String
 });
