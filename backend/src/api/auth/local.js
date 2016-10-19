@@ -3,38 +3,42 @@
 
 const express = require('express');
 const async = require('async');
+const bcrypt = require('bcrypt');
 const passport = require('passport');
-const util = require('../../util');
 const database = require('../../database');
 const User = database.models.User;
 const LocalStrategy = require('passport-local').Strategy;
 
-function generatePasswordHash(password, user) {
-    return util.hash({
-        password: password,
-        salt: `l33tp4sw0rd#${password.length}#${user.id}`
-    });
-}
 
-function validatePassword(password, user) {
-    return user.get("_password_hash") === generatePasswordHash(password, user);
-}
 
-passport.use(new LocalStrategy({
-    usernameField: 'email'
-}, function (email, password, next) {
-    User.findOne({email}, function (err, user) {
-        if (err) {
-            return next(err);
-        }
+passport.use(new LocalStrategy(
+    {usernameField: 'email'},
+    function (email, password, next) {
+        async.auto({
+            find_user_by_email: User.findOne.bind(User, {email}),
+            validate_password: ['find_user_by_email', function (results, next) {
+                const user = results.find_user_by_email;
 
-        if (!user || !validatePassword(password, user)) {
-            return next(null, false);
-        }
+                if (!user) {
+                    // user doesn't exist
+                    return next(false);
+                }
 
-        next(null, user);
-    });
-}));
+                bcrypt.compare(password, user.get("_password_hash"), next);
+            }]
+        }, function (err, results) {
+            if (err) {
+                return next(err);
+            }
+
+            if (results.validate_password) {
+                next(null, results.find_user_by_email);
+            } else {
+                next(null, false);
+            }
+        });
+    }
+));
 
 const router = new express.Router();
 
@@ -46,17 +50,28 @@ router.post(
     }
 );
 
+
 router.post('/signup', function (req, res, next) {
 
-    const name = req.body.name;
-    const email = req.body.email;
-    const user = new User({name, email});
-
     const password = req.body.password;
-    const passwordHash = generatePasswordHash(password, user);
-    user.set("_password_hash", passwordHash);
+    const user = new User({
+        name: req.body.name,
+        email: req.body.email
+    });
+
+    function setPasswordHash(next) {
+        bcrypt.hash(password, 10, function (err, hash) {
+            if (err) {
+                return next(err);
+            }
+
+            user.set("_password_hash", hash);
+            next();
+        });
+    }
 
     async.series([
+        setPasswordHash,
         user.save.bind(user),
         req.login.bind(req, user)
     ], function (err) {
