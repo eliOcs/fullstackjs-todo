@@ -48,7 +48,6 @@ router.post(
     }
 );
 
-
 router.post('/signup', function (req, res, next) {
 
     const password = req.body.password;
