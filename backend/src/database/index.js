@@ -48,12 +48,8 @@ const TodoSchema = new mongoose.Schema({
     completed: {
         type: Boolean,
         required: true
-    },
-    "_user": {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
     }
+    // TODO: Add a new property to hold the owner of this todo
 });
 TodoSchema.set('toJSON', {virtuals: true, transform: removePrivateKeys});
 database.models.Todo = mongoose.model('Todo', TodoSchema);
