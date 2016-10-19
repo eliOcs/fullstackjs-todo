@@ -40,7 +40,13 @@ const UserService = Class({
                     this.user.next(response.json());
                     return true;
                 },
-                (response) => response.status === 401 ? false : Promise.reject(response)
+                (response) => {
+                    if (response.status === 401) {
+                        false
+                    } else {
+                        Promise.reject(response)
+                    }
+                }
             ).catch(this.handleError);
     },
 

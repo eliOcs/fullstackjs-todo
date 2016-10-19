@@ -6,7 +6,8 @@ const UserService = require('./user.service');
 
 const SignInComponent = Component({
     selector: 'sign-in',
-    templateUrl: 'templates/user/sign-in.component.html'
+    templateUrl: 'templates/user/sign-in.component.html',
+    styleUrls: ['styles/form.component.css']
 }).Class({
     constructor: [UserService, function (userService) {
         this.userService = userService;

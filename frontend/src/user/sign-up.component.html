@@ -2,6 +2,7 @@
   <div class="six columns offset-by-three">
     <label for="name">Your name</label>
     <input
+      required
       [(ngModel)]="name"
       class="u-full-width"
       type="text"
@@ -13,6 +14,7 @@
   <div class="six columns offset-by-three">
     <label for="email">Your email</label>
     <input
+      required
       [(ngModel)]="email"
       class="u-full-width"
       type="email"
@@ -24,6 +26,7 @@
   <div class="six columns offset-by-three">
     <label for="password">Your password</label>
     <input
+      required
       [(ngModel)]="password"
       (keyup.enter)="signUp()"
       class="u-full-width"
