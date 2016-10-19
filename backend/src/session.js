@@ -38,10 +38,6 @@ session.initialize = function () {
     ];
 };
 
-session.requireActiveSession = function (req, res, next) {
-    if (req.user) {
-        return next();
-    }
-
-    res.status(401).send();
+session.requireActiveSession = function () {
+// TODO: make sure there user has signed in
 };
