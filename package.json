@@ -2,7 +2,7 @@
   "name": "fullstackjs-todo",
   "version": "1.0.0",
   "description": "A simple Todo app using a full javascript stack",
-  "main": "index.js",
+  "main": "",
   "scripts": {
     "backend": "node_modules/nodemon/bin/nodemon.js backend/src/index.js -w backend/src",
     "frontend": "node_modules/webpack/bin/webpack.js --watch",

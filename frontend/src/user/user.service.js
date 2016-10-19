@@ -43,9 +43,9 @@ const UserService = Class({
                 (response) => {
                     if (response.status === 401) {
                         false
-                    } else {
-                        Promise.reject(response)
                     }
+
+                    throw new Error('Unexpected error');
                 }
             ).catch(this.handleError);
     },
@@ -74,7 +74,8 @@ const UserService = Class({
     },
 
     handleError(err) {
-        throw err;
+        console.error(err.message);
+        return Promise.reject(err);
     }
 
 });
