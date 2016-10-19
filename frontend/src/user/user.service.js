@@ -4,16 +4,14 @@
 const Class = require('@angular/core').Class;
 const Http = require('@angular/http').Http;
 const Headers = require('@angular/http').Headers;
-const CookieService = require('angular2-cookie/services/cookies.service').CookieService;
 
 require('rxjs/add/operator/toPromise');
 const Subject = require('rxjs').Subject;
 
 const UserService = Class({
 
-    constructor: [Http, CookieService, function (http, cookieService) {
+    constructor: [Http, function (http) {
         this.http = http;
-        this.cookieService = cookieService;
         this.headers = new Headers({"Content-Type": "application/json"});
         this.user = new Subject();
         this.getUser().then((user) => {

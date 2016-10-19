@@ -30,7 +30,6 @@
     "@angular/platform-browser-dynamic": "2.1.0",
     "@angular/router": "3.1.0",
     "@angular/upgrade": "2.1.0",
-    "angular2-cookie": "1.2.4",
     "async": "2.1.1",
     "babel-polyfill": "6.16.0",
     "body-parser": "1.15.2",
