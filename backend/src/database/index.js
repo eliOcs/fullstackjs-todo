@@ -16,18 +16,45 @@ database.connection = mongoose.connection;
 
 database.models = {};
 
-database.models.User = mongoose.model('User', new mongoose.Schema({
-    name: String,
-    email: String,
-    "_password_hash": String,
-    "_github_id": String
-}));
+function removePrivateKeys(doc, ret, options) {
+    const privateKeys = Object.keys(ret).filter((key) => key.startsWith("_"));
+    privateKeys.forEach((key) => delete ret[key]);
+    return ret;
+}
 
-database.models.Todo = mongoose.model('Todo', new mongoose.Schema({
-    title: String,
-    completed: Boolean,
+const UserSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    "_password_hash": {
+        type: String,
+        required: true
+    },
+    "_github_id": String
+});
+UserSchema.set('toJSON', {virtuals: true, transform: removePrivateKeys});
+database.models.User = mongoose.model('User', UserSchema);
+
+const TodoSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    completed: {
+        type: Boolean,
+        required: true
+    },
     "_user": {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     }
-}));
+});
+TodoSchema.set('toJSON', {virtuals: true, transform: removePrivateKeys});
+database.models.Todo = mongoose.model('Todo', TodoSchema);

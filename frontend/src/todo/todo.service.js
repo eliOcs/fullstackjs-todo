@@ -35,7 +35,7 @@ const TodoService = Class({
     updateTodo(todo) {
         return this.http
             .put(
-                `${this.baseUrl}/${todo._id}`,
+                `${this.baseUrl}/${todo.id}`,
                 JSON.stringify(todo),
                 {headers: this.headers}
             )
@@ -44,7 +44,7 @@ const TodoService = Class({
     },
 
     deleteTodo(todo) {
-        return this.http.delete(`${this.baseUrl}/${todo._id}`)
+        return this.http.delete(`${this.baseUrl}/${todo.id}`)
             .toPromise().then((response) => response.json())
             .catch(this.handleError);
     },

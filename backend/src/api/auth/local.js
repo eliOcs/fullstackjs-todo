@@ -9,8 +9,6 @@ const database = require('../../database');
 const User = database.models.User;
 const LocalStrategy = require('passport-local').Strategy;
 
-
-
 passport.use(new LocalStrategy(
     {usernameField: 'email'},
     function (email, password, next) {
