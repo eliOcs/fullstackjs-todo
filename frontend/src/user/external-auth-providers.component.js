@@ -6,7 +6,7 @@ const Component = require('@angular/core').Component;
 const ExternalAuthProvidersComponent = Component({
     selector: 'external-auth-providers',
     templateUrl: 'templates/user/external-auth-providers.component.html',
-    styleUrls: ['templates/user/external-auth-providers.component.css']
+    styleUrls: ['styles/user/external-auth-providers.component.css']
 }).Class({
     constructor: function () {}
 });
