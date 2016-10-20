@@ -33,9 +33,10 @@ const UserSchema = new mongoose.Schema({
         unique: true
     },
     "_password_hash": {
-        type: String
-    },
-    "_github_id": String
+        type: String,
+        required: true
+    }
+    // TODO: add a new property to hold the github id
 });
 UserSchema.set('toJSON', {virtuals: true, transform: removePrivateKeys});
 database.models.User = mongoose.model('User', UserSchema);
