@@ -24,10 +24,8 @@ router.get(
 
 router.post(
     '/',
-    session.requireActiveSession,
     function (req, res, next) {
         const todo = new Todo(req.body);
-        todo.set('_user', req.user.id);
 
         todo.save(function (err) {
             if (err) {
@@ -68,11 +66,9 @@ router.put(
 
 router.delete(
     '/:id',
-    session.requireActiveSession,
     function (req, res, next) {
         Todo.findOneAndRemove(
             {
-                '_user': req.user.id,
                 '_id': req.params.id
             },
             function (err, todo) {
