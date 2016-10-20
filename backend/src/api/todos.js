@@ -81,8 +81,7 @@ router.delete(
                 }
 
                 if (!todo) {
-                    return next(new Error(`Todo with id: '${req.params.id}'
-                        doesn't exist`));
+                    return next(new Error(`Todo with doesn't exist`));
                 }
                 res.json(todo);
             }
