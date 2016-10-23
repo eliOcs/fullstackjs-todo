@@ -10,13 +10,14 @@ const Router = require('./app.router');
 const UserService = require('./user/user.service');
 const AppComponent = require('./app.component');
 const LoadingComponent = require('./loading.component');
-const NavigationComponent = require('./navigation.component');
 
+const PublicNavigationComponent = require('./user/public-navigation.component');
 const SignInComponent = require('./user/sign-in.component');
 const SignUpComponent = require('./user/sign-up.component');
 const ExternalAuthProvidersComponent = require('./user/external-auth-providers.component');
 
 const TodoListComponent = require('./todo/todo-list.component');
+const TodoNavigationComponent = require('./todo/todo-navigation.component');
 const TodoComponent = require('./todo/todo.component');
 
 const AppModule = NgModule({
@@ -32,10 +33,11 @@ const AppModule = NgModule({
     declarations: [
         AppComponent,
         LoadingComponent,
-        NavigationComponent,
+        PublicNavigationComponent,
         SignInComponent,
         SignUpComponent,
         ExternalAuthProvidersComponent,
+        TodoNavigationComponent,
         TodoListComponent,
         TodoComponent
     ],

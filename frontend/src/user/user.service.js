@@ -6,25 +6,35 @@ const Http = require('@angular/http').Http;
 const Headers = require('@angular/http').Headers;
 
 require('rxjs/add/operator/toPromise');
-const Subject = require('rxjs').Subject;
+const BehaviorSubject = require('rxjs').BehaviorSubject;
 
 const UserService = Class({
 
     constructor: [Http, function (http) {
         this.http = http;
         this.headers = new Headers({"Content-Type": "application/json"});
-        this.user = new Subject();
-        this.getUser().then((user) => {
-            this.user.next(user)
-        });
     }],
 
     getUser() {
+        if (this.user) {
+            return Promise.resolve(this.user);
+        }
+
         return this.http
             .get('/api/users/me')
             .toPromise().then(
-                (response) => response.json(),
-                (response) => response.status === 401 ? null : Promise.reject(response)
+                (response) => {
+                    this.user = new BehaviorSubject(response.json());
+                    return this.user;
+                },
+                (response) => {
+                    if (response.status === 401) {
+                        this.user = new BehaviorSubject(null);
+                        return Promise.resolve(this.user);
+                    } else {
+                        return new Error("Couldn't get user");
+                    }
+                }
             ).catch(this.handleError);
     },
 
@@ -75,7 +85,6 @@ const UserService = Class({
 
     handleError(err) {
         console.error(err.message);
-        return Promise.reject(err);
     }
 
 });
