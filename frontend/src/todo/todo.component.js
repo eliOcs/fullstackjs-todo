@@ -8,15 +8,12 @@ const TodoService = require('./todo.service');
 const TodoComponent = Component({
     selector: 'todo',
     inputs: ['todo'],
-    outputs: ['onDelete'],
-    providers: [TodoService],
     templateUrl: 'templates/todo/todo.component.html',
     styleUrls: ['styles/todo/todo.component.css']
 }).Class({
     constructor: [TodoService, function (todoService) {
         this.todoService = todoService;
         this.editing = false;
-        this.onDelete = new EventEmitter();
     }],
 
     state() {
@@ -30,8 +27,7 @@ const TodoComponent = Component({
     },
 
     complete() {
-        this.todo.completed = true;
-        this.todoService.updateTodo(this.todo)
+        this.todoService.completeTodo(this.todo);
     },
 
     edit() {
@@ -39,10 +35,8 @@ const TodoComponent = Component({
     },
 
     finishEdit(newTitle) {
-        const that = this;
-        that.todoService.updateTodo(that.todo).then(function () {
-            that.todo.title = newTitle;
-            that.editing = false;
+        this.todoService.updateTodoTitle(this.todo, newTitle).then(() => {
+            this.editing = false;
         });
     },
 
@@ -51,10 +45,7 @@ const TodoComponent = Component({
     },
 
     delete() {
-        const that = this;
-        that.todoService.deleteTodo(that.todo).then(function () {
-            that.onDelete.emit(that.todo);
-        });
+        this.todoService.deleteTodoById(this.todo.id);
     }
 });
 

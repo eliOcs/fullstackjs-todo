@@ -8,6 +8,7 @@ const HttpModule = require('@angular/http').HttpModule;
 
 const Router = require('./app.router');
 const UserService = require('./user/user.service');
+const TodoService = require('./todo/todo.service');
 const AppComponent = require('./app.component');
 const LoadingComponent = require('./loading.component');
 
@@ -28,7 +29,8 @@ const AppModule = NgModule({
         Router
     ],
     providers: [
-        UserService
+        UserService,
+        TodoService
     ],
     declarations: [
         AppComponent,

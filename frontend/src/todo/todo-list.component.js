@@ -6,40 +6,32 @@ const TodoService = require('./todo.service');
 
 const TodoListComponent = Component({
     selector: 'todo-list',
-    templateUrl: 'templates/todo/todo-list.component.html',
-    providers: [TodoService]
+    templateUrl: 'templates/todo/todo-list.component.html'
 }).Class({
     constructor: [
         TodoService,
         function (todosService) {
             this.todosService = todosService;
             this.newTodoTitle = '';
-            this.todos = [];
         }
     ],
 
     ngOnInit() {
-        this.todosService.getTodos().then((todos) => this.todos = todos);
+        this.todosService.getTodos().then((todosObservable) => {
+            todosObservable.subscribe((todos) => {
+                this.todos = todos;
+            });
+        });
     },
 
     newTodo() {
-        const todo = {
-            title: this.newTodoTitle,
-            completed: false
-        };
-        const that = this;
-        that.todosService.createTodo(todo).then(function (todo) {
-            that.todos.push(todo);
-            that.clearNewTodoTitle();
+        this.todosService.createTodo(this.newTodoTitle, false).then((todo) => {
+            this.clearNewTodoTitle();
         });
     },
 
     clearNewTodoTitle() {
         this.newTodoTitle = '';
-    },
-
-    onDelete(todo) {
-        this.todos.splice(this.todos.indexOf(todo), 1);
     }
 
 });
