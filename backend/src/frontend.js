@@ -4,7 +4,7 @@ const express = require("express");
 
 const router = new express.Router();
 
-router.use("/", express.static("./frontend/build"));
+router.use(express.static("./frontend/build"));
 
 const sendFrontendEntry = (function () {
     const path = require("path");
@@ -23,7 +23,7 @@ const frontendRoutes = (function () {
     let routes = [];
     let match;
     while ((match = regex.exec(content))) {
-        routes.push(match[1]);
+        routes.push(`/${match[1]}`);
     }
     return routes;
 })();
