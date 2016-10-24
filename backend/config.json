@@ -1,0 +1,21 @@
+{
+  "environment": "dev",
+
+  "dev": {
+    "server": {
+      "port": 3000
+    },
+    "database": {
+      "url": "mongodb://localhost/todos-dev"
+    }
+  },
+
+  "test": {
+    "server": {
+      "port": 3001
+    },
+    "database": {
+      "url": "mongodb://localhost/todos-test"
+    }
+  }
+}
