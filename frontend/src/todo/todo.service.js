@@ -12,21 +12,25 @@ class TodoService {
     }
 
     getTodos() {
-        if (this.todos) {
-            return Promise.resolve(this.todos);
+        if (this.getTodosPromise) {
+            return this.getUserPromise;
         }
 
-        return this.http
+        this.getTodosPromise = this.http
             .get(this.baseUrl)
             .toPromise().then(
                 (response) => {
+                    this.getTodosPromise = null;
                     this.todos = new BehaviorSubject(response.json());
                     return this.todos;
                 },
                 () => {
+                    this.getTodosPromise = null;
                     return new Error("Couldn't get todos");
                 }
             ).catch(this.handleError);
+
+        return this.getTodosPromise;
     }
 
     createTodo(title, completed) {

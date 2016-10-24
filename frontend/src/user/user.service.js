@@ -16,14 +16,20 @@ class UserService {
             return Promise.resolve(this.user);
         }
 
-        return this.http
+        if (this.getUserPromise) {
+            return this.getUserPromise;
+        }
+
+        this.getUserPromise = this.http
             .get("/api/users/me")
             .toPromise().then(
                 (response) => {
+                    this.getUserPromise = null;
                     this.user = new BehaviorSubject(response.json());
                     return this.user;
                 },
                 (response) => {
+                    this.getUserPromise = null;
                     if (response.status === 401) {
                         this.user = new BehaviorSubject(null);
                         return Promise.resolve(this.user);
@@ -32,6 +38,8 @@ class UserService {
                     }
                 }
             ).catch(this.handleError);
+            
+        return this.getUserPromise;
     }
 
     signIn(email, password) {
@@ -82,7 +90,9 @@ class UserService {
         return this.http
             .post("/api/auth/signout")
             .toPromise()
-            .then(() => this.user.next(null));
+            .then(() => {
+                this.user.next(null);
+            });
     }
 
     handleError(err) {
