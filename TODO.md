@@ -2,7 +2,7 @@
 
 * Add tests
 * Add logging
-* Add HTTP
+* Add HTTPS
 * Move constants to separate files and divide by environments
 * Minify frontend assets
 * Deploy
