@@ -1,24 +1,23 @@
-/*jslint node, es6, maxlen: 80*/
-'use strict';
+"use strict";
 
-const express = require('express');
-const async = require('async');
-const bcrypt = require('bcrypt');
-const passport = require('passport');
-const database = require('../../database');
+const express = require("express");
+const async = require("async");
+const bcrypt = require("bcrypt");
+const passport = require("passport");
+const database = require("../../database");
 const User = database.models.User;
-const LocalStrategy = require('passport-local').Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 
 passport.use(new LocalStrategy(
-    {usernameField: 'email'},
+    {usernameField: "email"},
     function (email, password, next) {
         async.auto({
             find_user_by_email: User.findOne.bind(User, {email}),
-            validate_password: ['find_user_by_email', function (results, next) {
+            validate_password: ["find_user_by_email", function (results, next) {
                 const user = results.find_user_by_email;
 
                 if (!user) {
-                    // user doesn't exist
+                    // user doesn"t exist
                     return next(false);
                 }
 
@@ -41,14 +40,14 @@ passport.use(new LocalStrategy(
 const router = new express.Router();
 
 router.post(
-    '/signin',
-    passport.authenticate('local'),
+    "/signin",
+    passport.authenticate("local"),
     function (req, res) {
         res.json(req.user);
     }
 );
 
-router.post('/signup', function (req, res, next) {
+router.post("/signup", function (req, res, next) {
 
     const password = req.body.password;
     const user = new User({

@@ -1,9 +1,8 @@
-/*jslint node, es6, maxlen: 80*/
-'use strict';
+"use strict";
 
-const async = require('async');
-const database = require('./database');
-const server = require('./server');
+const async = require("async");
+const database = require("./database");
+const server = require("./server");
 
 async.series([
     database.connect,

@@ -1,15 +1,14 @@
-/*jslint node, es6, maxlen: 80*/
-'use strict';
+"use strict";
 
-const express = require('express');
+const express = require("express");
 const router = new express.Router();
-const session = require('../../session');
+const session = require("../../session");
 
-router.use('/local', require('./local'));
-router.use('/github', require('./github'));
+router.use("/local", require("./local"));
+router.use("/github", require("./github"));
 
 router.post(
-    '/signout',
+    "/signout",
     session.requireActiveSession,
     function (req, res) {
         req.logout();

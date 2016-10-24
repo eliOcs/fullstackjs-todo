@@ -1,15 +1,14 @@
-/*jslint node, es6, maxlen: 80*/
-'use strict';
+"use strict";
 
-const express = require('express');
-const session = require('../session');
+const express = require("express");
+const session = require("../session");
 
 const router = new express.Router();
 
 router.get(
-    '/me',
+    "/me",
     session.requireActiveSession,
-    function (req, res, next) {
+    function (req, res) {
         res.json(req.user);
     }
 );

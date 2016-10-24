@@ -1,10 +1,9 @@
-/*jslint node, es6, maxlen: 80*/
-'use strict';
+"use strict";
 
-const expressSession = require('express-session');
-const MongoStore = require('connect-mongo')(expressSession);
-const database = require('./database');
-const passport = require('passport');
+const expressSession = require("express-session");
+const MongoStore = require("connect-mongo")(expressSession);
+const database = require("./database");
+const passport = require("passport");
 const session = exports;
 
 function setupUserSessionSerialization() {
@@ -25,8 +24,8 @@ session.initialize = function () {
 
     return [
         expressSession({
-            name: 'todo-session',
-            secret: 'l33tp4sw0rd',
+            name: "todo-session",
+            secret: "l33tp4sw0rd",
             saveUninitialized: false,
             resave: false,
             store: new MongoStore({

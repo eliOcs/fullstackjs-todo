@@ -1,7 +1,6 @@
-/*jslint node, es6, maxlen: 80*/
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 mongoose.Promise = global.Promise;
@@ -9,7 +8,7 @@ mongoose.Promise = global.Promise;
 let database = exports;
 
 database.connect = function (next) {
-    mongoose.connect('mongodb://localhost/todos', next);
+    mongoose.connect("mongodb://localhost/todos", next);
 };
 
 database.connection = mongoose.connection;
@@ -37,8 +36,8 @@ const UserSchema = new mongoose.Schema({
     },
     "_github_id": String
 });
-UserSchema.set('toJSON', {virtuals: true, transform: removePrivateKeys});
-database.models.User = mongoose.model('User', UserSchema);
+UserSchema.set("toJSON", {virtuals: true, transform: removePrivateKeys});
+database.models.User = mongoose.model("User", UserSchema);
 
 const TodoSchema = new mongoose.Schema({
     title: {
@@ -51,9 +50,9 @@ const TodoSchema = new mongoose.Schema({
     },
     "_user": {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
         required: true
     }
 });
-TodoSchema.set('toJSON', {virtuals: true, transform: removePrivateKeys});
-database.models.Todo = mongoose.model('Todo', TodoSchema);
+TodoSchema.set("toJSON", {virtuals: true, transform: removePrivateKeys});
+database.models.Todo = mongoose.model("Todo", TodoSchema);

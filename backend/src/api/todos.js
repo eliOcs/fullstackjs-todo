@@ -1,18 +1,17 @@
-/*jslint node, es6, maxlen: 80*/
-'use strict';
+"use strict";
 
-const express = require('express');
-const session = require('../session');
-const database = require('../database');
+const express = require("express");
+const session = require("../session");
+const database = require("../database");
 const Todo = database.models.Todo;
 
 const router = new express.Router();
 
 router.get(
-    '/',
+    "/",
     session.requireActiveSession,
     function (req, res, next) {
-        Todo.find({'_user': req.user.id}, function (err, todos) {
+        Todo.find({"_user": req.user.id}, function (err, todos) {
             if (err) {
                 return next(err);
             }
@@ -23,11 +22,11 @@ router.get(
 );
 
 router.post(
-    '/',
+    "/",
     session.requireActiveSession,
     function (req, res, next) {
         const todo = new Todo(req.body);
-        todo.set('_user', req.user.id);
+        todo.set("_user", req.user.id);
 
         todo.save(function (err) {
             if (err) {
@@ -39,13 +38,13 @@ router.post(
 );
 
 router.put(
-    '/:id',
+    "/:id",
     session.requireActiveSession,
     function (req, res, next) {
         Todo.findOneAndUpdate(
             {
-                '_user': req.user.id,
-                '_id': req.params.id
+                "_user": req.user.id,
+                "_id": req.params.id
             },
             {
                 title: req.body.title,
@@ -67,13 +66,13 @@ router.put(
 );
 
 router.delete(
-    '/:id',
+    "/:id",
     session.requireActiveSession,
     function (req, res, next) {
         Todo.findOneAndRemove(
             {
-                '_user': req.user.id,
-                '_id': req.params.id
+                "_user": req.user.id,
+                "_id": req.params.id
             },
             function (err, todo) {
                 if (err) {
@@ -81,7 +80,7 @@ router.delete(
                 }
 
                 if (!todo) {
-                    return next(new Error(`Todo with doesn't exist`));
+                    return next(new Error("Todo doesn't exist"));
                 }
                 res.json(todo);
             }

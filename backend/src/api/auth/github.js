@@ -1,19 +1,18 @@
-/*jslint node, es6, maxlen: 80*/
-'use strict';
+"use strict";
 
-const express = require('express');
-const passport = require('passport');
-const GitHubStrategy = require('passport-github2');
-const database = require('../../database');
+const express = require("express");
+const passport = require("passport");
+const GitHubStrategy = require("passport-github2");
+const database = require("../../database");
 const User = database.models.User;
 
 const router = new express.Router();
 
 passport.use(new GitHubStrategy(
     {
-        clientID: '67328b9371b1392ac68e',
-        clientSecret: '6ba52d89ef0f4dbc72580dedc653f92c84302076',
-        callbackURL: 'http://localhost:3000/api/auth/github/callback'
+        clientID: "67328b9371b1392ac68e",
+        clientSecret: "6ba52d89ef0f4dbc72580dedc653f92c84302076",
+        callbackURL: "http://localhost:3000/api/auth/github/callback"
     },
     function (accessToken, refreshToken, profile, next) {
         User.findOne({"_github_id": profile.id}, function (err, user) {
@@ -41,13 +40,13 @@ passport.use(new GitHubStrategy(
     }
 ));
 
-router.get('/', passport.authenticate('github', {scope: ['user:email']}));
+router.get("/", passport.authenticate("github", {scope: ["user:email"]}));
 
 router.get(
-    '/callback',
-    passport.authenticate('github', {failureRedirect: '/signin'}),
+    "/callback",
+    passport.authenticate("github", {failureRedirect: "/signin"}),
     function (req, res) {
-        res.redirect('/');
+        res.redirect("/");
     }
 );
 
