@@ -1,20 +1,12 @@
-/*jslint browser, es6, maxlen: 80*/
-/*global require, module */
+const Component = require("@angular/core").Component;
+const TodoService = require("./todo.service");
 
-const Component = require('@angular/core').Component;
-const TodoService = require('./todo.service');
+class TodoListComponent {
 
-const TodoListComponent = Component({
-    selector: 'todo-list',
-    templateUrl: 'templates/todo/todo-list.component.html'
-}).Class({
-    constructor: [
-        TodoService,
-        function (todosService) {
-            this.todosService = todosService;
-            this.newTodoTitle = '';
-        }
-    ],
+    constructor(todosService) {
+        this.todosService = todosService;
+        this.newTodoTitle = "";
+    }
 
     ngOnInit() {
         this.todosService.getTodos().then((todosObservable) => {
@@ -22,18 +14,25 @@ const TodoListComponent = Component({
                 this.todos = todos;
             });
         });
-    },
-
-    newTodo() {
-        this.todosService.createTodo(this.newTodoTitle, false).then((todo) => {
-            this.clearNewTodoTitle();
-        });
-    },
-
-    clearNewTodoTitle() {
-        this.newTodoTitle = '';
     }
 
-});
+    newTodo() {
+        this.todosService.createTodo(this.newTodoTitle, false).then(() => {
+            this.clearNewTodoTitle();
+        });
+    }
+
+    clearNewTodoTitle() {
+        this.newTodoTitle = "";
+    }
+
+}
+
+TodoListComponent.annotations = [new Component({
+    selector: "todo-list",
+    templateUrl: "templates/todo/todo-list.component.html"
+})];
+
+TodoListComponent.parameters = [TodoService];
 
 module.exports = TodoListComponent;

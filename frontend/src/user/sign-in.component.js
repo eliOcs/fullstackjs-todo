@@ -1,28 +1,28 @@
-/*jslint browser, es6, maxlen: 80*/
-/*global require, module */
+const Component = require("@angular/core").Component;
+const UserService = require("./user.service");
 
-const Component = require('@angular/core').Component;
-const UserService = require('./user.service');
-
-const SignInComponent = Component({
-    selector: 'sign-in',
-    templateUrl: 'templates/user/sign-in.component.html',
-    styleUrls: ['styles/form.component.css']
-}).Class({
-    constructor: [UserService, function (userService) {
+class SignInComponent {
+    constructor(userService) {
         this.userService = userService;
-    }],
+    }
 
-    signIn: function () {
-        const that = this;
+    signIn() {
         this.userService
-            .signIn(that.email, that.password)
-            .then(function (successful) {
+            .signIn(this.email, this.password)
+            .then((successful) => {
                 if (!successful) {
-                    console.log("FAILED TO LOG!");
+                    // TODO: error handling
                 }
             });
     }
-});
+}
+
+SignInComponent.annotations = [new Component({
+    selector: "sign-in",
+    templateUrl: "templates/user/sign-in.component.html",
+    styleUrls: ["styles/form.component.css"]
+})];
+
+SignInComponent.parameters = [UserService];
 
 module.exports = SignInComponent;

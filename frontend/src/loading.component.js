@@ -1,7 +1,4 @@
-/*jslint browser, es6, maxlen: 80*/
-/*global require, module */
-
-const Component = require('@angular/core').Component;
+const Component = require("@angular/core").Component;
 
 class LoadingComponent {
     constructor() {}
@@ -9,8 +6,8 @@ class LoadingComponent {
 
 LoadingComponent.annotations = [
     new Component({
-        selector: 'loading',
-        templateUrl: 'templates/loading.component.html'
+        selector: "loading",
+        templateUrl: "templates/loading.component.html"
     })
 ];
 

@@ -1,20 +1,11 @@
-/*jslint browser, es6, maxlen: 80*/
-/*global require, module */
+const Component = require("@angular/core").Component;
+const TodoService = require("./todo.service");
 
-const Component = require('@angular/core').Component;
-const EventEmitter = require('@angular/core').EventEmitter;
-const TodoService = require('./todo.service');
-
-const TodoComponent = Component({
-    selector: 'todo',
-    inputs: ['todo'],
-    templateUrl: 'templates/todo/todo.component.html',
-    styleUrls: ['styles/todo/todo.component.css']
-}).Class({
-    constructor: [TodoService, function (todoService) {
+class TodoComponent {
+    constructor(todoService) {
         this.todoService = todoService;
         this.editing = false;
-    }],
+    }
 
     state() {
         if (this.todo.completed) {
@@ -24,29 +15,38 @@ const TodoComponent = Component({
         } else {
             return "default";
         }
-    },
+    }
 
     complete() {
         this.todoService.completeTodo(this.todo);
-    },
+    }
 
     edit() {
         this.editing = true;
-    },
+    }
 
     finishEdit(newTitle) {
         this.todoService.updateTodoTitle(this.todo, newTitle).then(() => {
             this.editing = false;
         });
-    },
+    }
 
     cancelEdit() {
         this.editing = false;
-    },
+    }
 
     delete() {
         this.todoService.deleteTodoById(this.todo.id);
     }
-});
+}
+
+TodoComponent.annotations = [new Component({
+    selector: "todo",
+    inputs: ["todo"],
+    templateUrl: "templates/todo/todo.component.html",
+    styleUrls: ["styles/todo/todo.component.css"]
+})];
+
+TodoComponent.parameters = [TodoService];
 
 module.exports = TodoComponent;

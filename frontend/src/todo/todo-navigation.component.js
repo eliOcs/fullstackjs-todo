@@ -1,9 +1,6 @@
-/*jslint browser, es6, maxlen: 80*/
-/*global require, module */
-
-const Component = require('@angular/core').Component;
-const Router = require('@angular/router').Router;
-const UserService = require('../user/user.service');
+const Component = require("@angular/core").Component;
+const Router = require("@angular/router").Router;
+const UserService = require("../user/user.service");
 
 class TodoNavigationComponent {
 
@@ -37,8 +34,8 @@ TodoNavigationComponent.parameters = [
 
 TodoNavigationComponent.annotations = [
     new Component({
-        selector: 'todo-navigation',
-        templateUrl: 'templates/todo/todo-navigation.component.html'
+        selector: "todo-navigation",
+        templateUrl: "templates/todo/todo-navigation.component.html"
     })
 ];
 

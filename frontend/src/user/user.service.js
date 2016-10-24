@@ -1,19 +1,15 @@
-/*jslint browser, es6, maxlen: 80*/
-/*global require, module */
+const Http = require("@angular/http").Http;
+const Headers = require("@angular/http").Headers;
 
-const Class = require('@angular/core').Class;
-const Http = require('@angular/http').Http;
-const Headers = require('@angular/http').Headers;
+require("rxjs/add/operator/toPromise");
+const BehaviorSubject = require("rxjs").BehaviorSubject;
 
-require('rxjs/add/operator/toPromise');
-const BehaviorSubject = require('rxjs').BehaviorSubject;
+class UserService {
 
-const UserService = Class({
-
-    constructor: [Http, function (http) {
+    constructor(http) {
         this.http = http;
         this.headers = new Headers({"Content-Type": "application/json"});
-    }],
+    }
 
     getUser() {
         if (this.user) {
@@ -21,7 +17,7 @@ const UserService = Class({
         }
 
         return this.http
-            .get('/api/users/me')
+            .get("/api/users/me")
             .toPromise().then(
                 (response) => {
                     this.user = new BehaviorSubject(response.json());
@@ -36,12 +32,12 @@ const UserService = Class({
                     }
                 }
             ).catch(this.handleError);
-    },
+    }
 
     signIn(email, password) {
         return this.http
             .post(
-                '/api/auth/local/signin',
+                "/api/auth/local/signin",
                 JSON.stringify({email, password}),
                 {headers: this.headers}
             )
@@ -52,18 +48,18 @@ const UserService = Class({
                 },
                 (response) => {
                     if (response.status === 401) {
-                        false
+                        false;
                     }
 
-                    throw new Error('Unexpected error');
+                    throw new Error("Unexpected error");
                 }
             ).catch(this.handleError);
-    },
+    }
 
     signUp(name, email, password) {
         return this.http
             .post(
-                '/api/auth/local/signup',
+                "/api/auth/local/signup",
                 JSON.stringify({name, email, password}),
                 {headers: this.headers}
             )
@@ -72,21 +68,29 @@ const UserService = Class({
                     this.user.next(response.json());
                     return true;
                 },
-                (response) => response.status === 401 ? false : Promise.reject(response)
+                (response) => {
+                    if (response.status === 401) {
+                        return Promise.resolve(false);
+                    }
+
+                    return new Error("Couldn't sign up user");
+                }
             ).catch(this.handleError);
-    },
+    }
 
     signOut() {
         return this.http
-            .post('/api/auth/signout')
+            .post("/api/auth/signout")
             .toPromise()
             .then(() => this.user.next(null));
-    },
+    }
 
     handleError(err) {
         console.error(err.message);
     }
 
-});
+}
+
+UserService.parameters = [Http];
 
 module.exports = UserService;

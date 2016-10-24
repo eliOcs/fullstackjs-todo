@@ -1,19 +1,15 @@
-/*jslint browser, es6, maxlen: 80*/
-/*global require, module */
+const Http = require("@angular/http").Http;
+const Headers = require("@angular/http").Headers;
 
-const Class = require('@angular/core').Class;
-const Http = require('@angular/http').Http;
-const Headers = require('@angular/http').Headers;
+require("rxjs/add/operator/toPromise");
+const BehaviorSubject = require("rxjs").BehaviorSubject;
 
-require('rxjs/add/operator/toPromise');
-const BehaviorSubject = require('rxjs').BehaviorSubject;
-
-const TodoService = Class({
-    constructor: [Http, function (http) {
+class TodoService {
+    constructor(http) {
         this.http = http;
         this.baseUrl = "/api/todos";
         this.headers = new Headers({"Content-Type": "application/json"});
-    }],
+    }
 
     getTodos() {
         if (this.todos) {
@@ -27,11 +23,11 @@ const TodoService = Class({
                     this.todos = new BehaviorSubject(response.json());
                     return this.todos;
                 },
-                (response) => {
+                () => {
                     return new Error("Couldn't get todos");
                 }
             ).catch(this.handleError);
-    },
+    }
 
     createTodo(title, completed) {
         return this.http
@@ -45,23 +41,23 @@ const TodoService = Class({
                     const todo = response.json();
                     this.todos.next(todos.concat(todo));
                 },
-                (response) => {
+                () => {
                     return new Error("Couldn't create todo");
                 }
             ).catch(this.handleError);
-    },
+    }
 
     completeTodo(todo) {
-        const updatedTodo = JSON.parse(JSON.stringify(todo))
+        const updatedTodo = JSON.parse(JSON.stringify(todo));
         updatedTodo.completed = true;
         return this.updateTodo(updatedTodo);
-    },
+    }
 
     updateTodoTitle(todo, newTitle) {
-        const updatedTodo = JSON.parse(JSON.stringify(todo))
+        const updatedTodo = JSON.parse(JSON.stringify(todo));
         updatedTodo.title = newTitle;
         return this.updateTodo(updatedTodo);
-    },
+    }
 
     updateTodo(updatedTodo) {
         return this.http
@@ -80,32 +76,34 @@ const TodoService = Class({
                     todos[oldTodoIndex] = newTodo;
                     this.todos.next(todos);
                 },
-                (response) => {
-                    return new Error(`Couldn't update todo: ${todo.id}`);
+                () => {
+                    return new Error(`Couldn"t update todo: ${updatedTodo.id}`);
                 }
             )
             .catch(this.handleError);
-    },
+    }
 
     deleteTodoById(id) {
         return this.http
             .delete(`${this.baseUrl}/${id}`)
             .toPromise().then(
-                (response) => {
+                () => {
                     const oldTodos = this.todos.getValue();
-                    const newTodos = oldTodos.filter((todo) => todo.id !== id)
+                    const newTodos = oldTodos.filter((todo) => todo.id !== id);
                     this.todos.next(newTodos);
                 },
-                (response) => {
-                    return new Error(`Couldn't create todo: ${todo.id}`);
+                () => {
+                    return new Error(`Couldn't create todo: ${id}`);
                 }
             ).catch(this.handleError);
-    },
+    }
 
     handleError(err) {
         console.error(err);
     }
 
-});
+}
+
+TodoService.parameters = [Http];
 
 module.exports = TodoService;
