@@ -6,6 +6,14 @@ module.exports = {
     },
     "extends": "eslint:recommended",
     "rules": {
+        "strict": [
+            "error",
+            "safe"
+        ],
+        "eqeqeq": [
+            "error",
+            "always"
+        ],
         "max-len": [
             "error",
             80

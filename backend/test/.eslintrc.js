@@ -1,2 +1,5 @@
-module.exports = require("../.eslintrc");
-module.exports.env.mocha = true;
+module.exports = {
+    "env": {
+        "mocha": true
+    }
+}
